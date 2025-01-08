@@ -1,15 +1,17 @@
 ﻿# pacman.py
+
 import os
 from logger import Logger, LoggerStatus
 
 def install_packages(package_names: list):
     for package in package_names:
-        # Проверяем, установлен ли пакет
+        # Check if package is already installed
         check_installed = os.system(f"pacman -Q {package} > /dev/null 2>&1")
         if check_installed == 0:
             Logger.add_record(f"Package already installed: {package}")
-            continue  # вместо return, используем continue, чтобы идти по списку
+            continue
 
+        # Check in official repos
         pacman_check = os.system(f"pacman -Si {package} > /dev/null 2>&1")
         if pacman_check == 0:
             pacman_install = os.system(f"sudo pacman -S --noconfirm {package}")
@@ -22,7 +24,7 @@ def install_packages(package_names: list):
                 )
             continue
 
-        # Если нет в оф. репах, пытаемся через AUR
+        # Check in AUR
         yay_check = os.system(f"yay -Si {package} > /dev/null 2>&1")
         if yay_check == 0:
             yay_install = os.system(f"yay -S --noconfirm {package}")
@@ -35,4 +37,5 @@ def install_packages(package_names: list):
                 )
             continue
 
+        # If not found anywhere
         Logger.add_record(f"Package not found in pacman or AUR: {package}", status=LoggerStatus.ERROR)

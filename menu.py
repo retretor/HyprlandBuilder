@@ -1,19 +1,20 @@
 ﻿# menu.py
+
 import curses
 
 MENU_ITEMS = [
-    "Установить окружение (Hyprland, Waybar, Rofi, Hyprpaper...)",
-    "Установить оболочку Fish и утилиты",
-    "Установить драйверы (NVIDIA, AMD, Intel)",
-    "Установить программы для работы (браузеры, мессенджеры, офис)",
-    "Установить программы для игр",
-    "Установить системные утилиты (звук, Wi-Fi, Bluetooth и т.д.)",
-    "Скопировать Dotfiles и настроить окружение",
-    "Выход"
+    "Install Hyprland environment (Hyprland, Waybar, Rofi, Hyprpaper, etc.)",
+    "Install shell (Fish) and utilities",
+    "Install drivers (NVIDIA, AMD, Intel)",
+    "Install work applications (browsers, messengers, office)",
+    "Install game applications (Steam, etc.)",
+    "Install system utilities (sound, Wi-Fi, Bluetooth, etc.)",
+    "Copy Dotfiles and configure environment",
+    "Exit"
 ]
 
 def run_menu(stdscr):
-    curses.curs_set(0)  # Скрываем курсор в TUI
+    curses.curs_set(0)  # Hide cursor in TUI
     current_row = 0
 
     while True:
@@ -42,13 +43,13 @@ def run_menu(stdscr):
         elif key in [curses.KEY_ENTER, 10, 13]:
             return current_row
 
-def start_menu():
-    curses.wrapper(main)
-
 def main(stdscr):
-    # Настраиваем цветовые пары
+    # Init color pairs
     curses.start_color()
     curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_CYAN)
 
     choice = run_menu(stdscr)
     return choice
+
+def start_menu():
+    return curses.wrapper(main)

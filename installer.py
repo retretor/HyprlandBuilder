@@ -1,11 +1,11 @@
 ﻿# installer.py
+
 import os
 from pacman import install_packages
 from logger import Logger, LoggerStatus
 
-# --- Пакеты для Hyprland и окружения ---
+# Packages for Hyprland environment
 HYPRLAND_PACKAGES = [
-    # Hyprland
     "hyprland",
     "waybar",
     "hyprpaper",
@@ -16,25 +16,22 @@ HYPRLAND_PACKAGES = [
     "swww",
     "kitty",
     "fastfetch",
-
-    # Шрифты и иконки
     "awesome-terminal-fonts",
     "otf-font-awesome",
     "ttf-font-awesome",
     "ttf-jetbrains-mono",
     "ttf-jetbrains-mono-nerd",
-
     "xdg-desktop-portal-hyprland-git",
     "wl-clipboard",
-    "grim",  # скриншоты
-    "slurp",  # выбор области
-    "mako",  # уведомления
+    "grim",
+    "slurp",
+    "mako"
 ]
 
-# --- Пакеты для shell и утилит ---
+# Packages for shell and utilities
 SHELL_UTILITY_PACKAGES = [
-    "fish",  # оставим оба, на выбор
-    "starship",  # приятная подсветка для shell
+    "fish",
+    "starship",
     "git",
     "wget",
     "curl",
@@ -43,23 +40,23 @@ SHELL_UTILITY_PACKAGES = [
     "p7zip",
     "htop",
     "rsync",
-    "neovim",  # или nano/vim - на ваш выбор
+    "neovim",
     "lazygit",
     "thunar"
 ]
 
-# --- Драйверы ---
+# Drivers
 NVIDIA_PACKAGES = [
-    "nvidia", "nvidia-utils", "nvidia-settings"  # для новых карт
+    "nvidia", "nvidia-utils", "nvidia-settings"
 ]
 AMD_PACKAGES = [
-    "xf86-video-amdgpu"  # свободный драйвер
+    "xf86-video-amdgpu"
 ]
 INTEL_PACKAGES = [
-    "xf86-video-intel"  # иногда люди ставят, иногда нет
+    "xf86-video-intel"
 ]
 
-# --- Программы для работы ---
+# Work apps
 WORK_APPS = [
     "firefox",
     "telegram-desktop",
@@ -67,12 +64,12 @@ WORK_APPS = [
     "libreoffice-still"
 ]
 
-# --- Программы для игр ---
+# Game apps
 GAME_APPS = [
     "steam",
 ]
 
-# --- Системные утилиты (звук, wifi, bluetooth...) ---
+# System utils
 SYSTEM_UTILS = [
     "networkmanager",
     "network-manager-applet",
@@ -80,11 +77,12 @@ SYSTEM_UTILS = [
     "pipewire-alsa",
     "pipewire-pulse",
     "wireplumber",
-    "bluez",  # Bluetooth
+    "bluez",
     "bluez-utils",
     "alsa-utils",
-    "pavucontrol",  # GUI для звука
-    "iw", "wpa_supplicant",  # Wi-Fi
+    "pavucontrol",
+    "iw",
+    "wpa_supplicant",
     "dialog",
     "openbsd-netcat",
     "dnsutils",
@@ -92,28 +90,36 @@ SYSTEM_UTILS = [
     "polkit-gnome"
 ]
 
-
 def update_system():
-    Logger.add_record("[+] Updating Pacman DataBase")
+    os.system("clear")
+    Logger.add_record("Updating system...")
+    # Full system update
     os.system("sudo pacman -Syu --noconfirm")
-    Logger.add_record("[+] System updated.")
+    Logger.add_record("System updated successfully.")
 
-    Logger.add_record("[+] Installing yay")
+    Logger.add_record("Installing 'yay' for AUR support...")
     os.system("sudo pacman -S --needed base-devel git --noconfirm")
-    os.system("git clone https://aur.archlinux.org/yay.git")
+    if not os.path.exists("yay"):
+        os.system("git clone https://aur.archlinux.org/yay.git")
     os.system("cd yay && makepkg -si --noconfirm")
-    Logger.add_record("[+] Done")
-
+    Logger.add_record("yay installed successfully.")
 
 def install_hyprland():
+    os.system("clear")
+    Logger.add_record("Installing Hyprland environment...")
     install_packages(HYPRLAND_PACKAGES)
-
+    Logger.add_record("Hyprland environment installation done.")
 
 def install_shell_utility():
+    os.system("clear")
+    Logger.add_record("Installing shell (Fish) and utilities...")
     install_packages(SHELL_UTILITY_PACKAGES)
-
+    Logger.add_record("Shell and utilities installed.")
 
 def install_drivers(driver_type: str):
+    os.system("clear")
+    Logger.add_record(f"Installing drivers for: {driver_type}")
+
     if driver_type == "nvidia":
         install_packages(NVIDIA_PACKAGES)
     elif driver_type == "amd":
@@ -121,41 +127,39 @@ def install_drivers(driver_type: str):
     elif driver_type == "intel":
         install_packages(INTEL_PACKAGES)
     else:
-        Logger.add_record(f"Неизвестный драйвер: {driver_type}", status=LoggerStatus.ERROR)
+        Logger.add_record(f"Unknown driver type: {driver_type}", status=LoggerStatus.ERROR)
+        return
 
+    Logger.add_record(f"Drivers for {driver_type} installed.")
 
 def install_work_apps():
+    os.system("clear")
+    Logger.add_record("Installing work applications...")
     install_packages(WORK_APPS)
-
+    Logger.add_record("Work applications installed.")
 
 def install_game_apps():
+    os.system("clear")
+    Logger.add_record("Installing game applications...")
     install_packages(GAME_APPS)
-
+    Logger.add_record("Game applications installed.")
 
 def install_system_utils():
+    os.system("clear")
+    Logger.add_record("Installing system utilities (sound, Wi-Fi, Bluetooth, etc.)...")
     install_packages(SYSTEM_UTILS)
-
+    Logger.add_record("System utilities installed.")
 
 def copy_dotfiles():
-    """
-    Допустим, у вас dotfiles лежат в папке Dotfiles:
-    Dotfiles/
-      ├── .config
-      │   └── waybar
-      ├── .zshrc
-      ├── .config
-      │   └── fish
-      ...
+    os.system("clear")
+    Logger.add_record("Copying Dotfiles...")
 
-    Можно рекурсивно скопировать .config и другие файлы в $HOME.
-    """
-    Logger.add_record("[+] Copying dotfiles from Dotfiles/")
     home = os.path.expanduser("~")
     dotfiles_dir = os.path.join(os.getcwd(), "Dotfiles")
 
-    # Простейший вариант: скопировать всё содержимое Dotfiles в HOME.
-    # Можно использовать rsync, если он установлен:
+    # Example: copy Dotfiles/.config/* to ~/.config/
+    # You can adjust logic as needed
     rsync_cmd = f'rsync -av --exclude ".git" "{dotfiles_dir}/" "{home}/.config/"'
     os.system(rsync_cmd)
 
-    Logger.add_record("[+] Dotfiles copied. Please check your configs and reload shell.")
+    Logger.add_record("Dotfiles copied. Please verify your configs.")
