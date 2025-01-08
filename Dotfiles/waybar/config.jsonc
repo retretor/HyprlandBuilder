@@ -1,0 +1,73 @@
+{
+	"layer": "top",
+	"modules-left": ["custom/launcher","cpu","memory","disk","hyprland/workspaces"],
+	"modules-center": ["clock"],
+	"modules-right": ["hyprland/language","network","pulseaudio","custom/power"],
+	
+	"pulseaudio": {
+		"tooltip": false,
+		"scroll-step": 5,
+		"format": "{icon}  {volume}%",
+		"format-muted": "muted",
+		"on-click":"pactl set-sink-mute @DEFAULT_SINK@ toggle",
+		"format-icons": {
+			"default": ["", "", ""]
+		}
+	},
+
+    "disk": {
+        "interval": 30,
+        "format": " {percentage_used}%",
+        "path": "/"
+    },
+
+
+    "hyprland/language": {
+        "format": "{1}",
+    },
+    "river/tags": {
+		"num-tags": 6
+    },
+    "cpu": {
+        "interval": 15,
+        "format": " {}%",
+        "max-length": 10
+    },
+    "memory": {
+        "interval": 30,
+        "format": " {}%",
+        "max-length": 10
+    },
+    "custom/launcher":{
+        "format": " ",
+        "on-click": "rofi -show drun",
+        "on-click-right": "killall rofi"
+    },
+    "custom/power":{
+        "format": "⏻ ",
+        "on-click": "rofi -show power-menu -modi power-menu:rofi-power-menu"
+    },
+    "clock": {
+        "format": "{:%A - %B %d, %Y - %R}"
+    },
+    "hyprland/workspaces": {
+        "format": "{icon}",
+        "format-icons": {
+            "1": "",
+            "2": "",
+            "3": "",
+            "4": "",
+            "5": "",
+            "urgent": "",
+            "active": "",
+            "default": ""
+    }
+    },
+    "network": {
+        "interface": "enp3s0",
+        "format-wifi": "{essid} ({signalStrength}%)",
+        "format-ethernet": "{ipaddr}/{cidr}",
+        "format-disconnected": "disconnected", //An empty format will hide the module.
+        "max-length": 50
+    }
+}
